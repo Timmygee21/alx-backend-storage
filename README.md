@@ -4,26 +4,26 @@
 When designing a database schema, it's important to define constraints on your tables to maintain data integrity and enforce business rules. Here's a guide on how to create tables with constraints in MySQL:  
 
 1. Create the table: Start by creating the table using the `CREATE TABLE` statement. Specify the table name and the column definitions.  
-`
+```
 CREATE TABLE table_name (  
     column1 datatype constraints,  
     column2 datatype constraints,  
     ...  
 );  
-`  
+```  
 
 2. Primary Key constraint: The primary key uniquely identifies each row in a table. Specify it using the `PRIMARY KEY` constraint.  
-`
+```
 CREATE TABLE table_name (  
     column1 datatype,  
     column2 datatype,  
     ...  
     PRIMARY KEY (column1)  
 );  
-`  
+```  
   
 3. Foreign Key constraint: Use the `FOREIGN KEY` constraint to establish relationships between tables. It ensures referential integrity.  
-`
+```
 CREATE TABLE table_name1 (  
     column1 datatype PRIMARY KEY,  
     ...  
@@ -34,36 +34,36 @@ CREATE TABLE table_name2 (
     ...  
     FOREIGN KEY (column1) REFERENCES table_name1(column1)  
 );  
-`  
+```  
 
 4. Unique constraint: To enforce uniqueness on one or more columns, use the `UNIQUE` constraint.  
-`
+```
 CREATE TABLE table_name (  
     column1 datatype,  
     column2 datatype,  
     ...  
     UNIQUE (column1)  
 );  
-`  
+```  
 
 5. Check constraint: Use the `CHECK` constraint to define custom conditions for data in a column.  
-`
+```
 CREATE TABLE table_name (  
     column1 datatype,  
     column2 datatype,  
     ...  
     CHECK (column1 > 0)  
 );  
-`  
+```  
 
 6. Not Null constraint: To enforce that a column must not contain null values, use the `NOT NULL` constraint.  
-`
+```
 CREATE TABLE table_name (  
     column1 datatype NOT NULL,  
     column2 datatype,  
     ...  
 );  
-`  
+```  
 
 # How to Optimize Queries by Adding Indexes  
 Optimizing queries is crucial for improving the performance of your database. One effective way is by adding indexes to your tables. Here's how you can do it in MySQL:  
@@ -90,20 +90,20 @@ Stored procedures and functions are powerful database constructs that allow you 
 Stored Procedure: A stored procedure is a named set of SQL statements that are stored in the database and can be executed whenever needed. It enhances code reusability and modularity.  
 
 To create a stored procedure in MySQL:  
-`
+```
 CREATE PROCEDURE procedure_name ([parameter1 datatype, ...])  
 BEGIN  
     -- SQL statements  
 END;  
-`  
+```  
 
 Example:  
-`
+```
 CREATE PROCEDURE GetEmployeeCount()  
 BEGIN  
     SELECT COUNT(*) FROM employees;  
 END;  
-`  
+```  
 
 To execute the stored procedure:  
 `CALL procedure_name();`  
@@ -112,23 +112,23 @@ Function: A function is similar to a stored procedure, but it always returns a v
 
 To create a function in MySQL:  
 
-`
+```
 CREATE FUNCTION function_name ([parameter1 datatype, ...])  
 RETURNS return_datatype  
 BEGIN  
     -- SQL statements  
     RETURN value;  
 END;  
-`
+```  
 
 Example:  
-`
+```
 CREATE FUNCTION CalculateDiscount(price DECIMAL(10,2))  
 RETURNS DECIMAL(10,2)  
 BEGIN  
     RETURN price * 0.1;  
 END;  
-`  
+```  
 
 To call the function:  
 `SELECT CalculateDiscount(100);`  
@@ -137,20 +137,20 @@ To call the function:
 Views in MySQL are virtual tables derived from the result of a predefined query. They provide an abstraction layer and simplify complex queries or restrict access to certain data. Here's how you can implement views:  
 
 To create a view in MySQL:  
-`
+```
 CREATE VIEW view_name AS  
 SELECT column1, column2, ...  
 FROM table_name  
 WHERE condition;  
-`  
+```  
 
 Example:  
-`
+```
 CREATE VIEW active_employees AS  
 SELECT employee_id, first_name, last_name  
 FROM employees  
 WHERE status = 'Active';  
-`  
+```  
 To query data from a view:  
 `SELECT * FROM view_name;`  
 
@@ -162,17 +162,17 @@ Triggers in MySQL are database objects that allow you to automatically execute a
 
 To create a trigger in MySQL:    
 
-`
+```
 CREATE TRIGGER trigger_name  
 {BEFORE | AFTER} {INSERT | UPDATE | DELETE} ON table_name  
 FOR EACH ROW  
 BEGIN  
     -- SQL statements  
 END;  
-`  
+```  
 
 Example:  
-`
+```
 CREATE TRIGGER audit_employee_changes  
 AFTER UPDATE ON employees  
 FOR EACH ROW  
@@ -180,7 +180,7 @@ BEGIN
     INSERT INTO employee_audit (employee_id, change_type, change_date)  
     VALUES (NEW.employee_id, 'UPDATE', NOW());  
 END;  
-`  
+```  
 Triggers are associated with specific tables and events. You can define them to execute either before or after the event occurs (`BEFORE` or `AFTER`), and for each affected row (`FOR EACH ROW`).  
 
 Triggers enable you to perform actions such as logging changes, maintaining audit trails, enforcing business rules, or synchronizing data across tables.  
