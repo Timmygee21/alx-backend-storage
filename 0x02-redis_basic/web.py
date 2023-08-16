@@ -34,3 +34,10 @@ def get_page(url: str) -> str:
     """
     response = requests.get(url)
     return response.text
+
+if __name__ == "__main__":
+    # Test the get_page function
+    url = "https://www.example.com"  # Replace with the desired URL
+    content = get_page(url)
+    print(content)
+
