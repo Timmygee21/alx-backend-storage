@@ -7,8 +7,6 @@ import requests
 from functools import wraps
 from typing import Callable
 
-# Create a global Redis client instance
-redis_client = redis.Redis()
 
 def track_get_page(fn: Callable) -> Callable:
     """ Decorator for get_page
@@ -19,12 +17,13 @@ def track_get_page(fn: Callable) -> Callable:
             - check whether a url's data is cached
             - tracks how many times get_page is called
         """
-        redis_client.incr(f'count:{url}')
-        cached_page = redis_client.get(f'{url}')
+        client = redis.Redis()
+        client.incr(f'count:{url}')
+        cached_page = client.get(f'{url}')
         if cached_page:
             return cached_page.decode('utf-8')
         response = fn(url)
-        redis_client.set(f'{url}', response, 10)
+        client.set(f'{url}', response, 10)
         return response
     return wrapper
 
@@ -35,4 +34,3 @@ def get_page(url: str) -> str:
     """
     response = requests.get(url)
     return response.text
-
