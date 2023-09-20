@@ -1,32 +1,36 @@
 #!/usr/bin/env python3
 """
-In this tasks, we will implement a get_page function
-(prototype: def get_page(url: str) -> str:). The core of the function
-is very simple. It uses the requests module to obtain the HTML
-content of a particular URL and returns it
+Caching request module
 """
-import requests
 import redis
+import requests
+from functools import wraps
+from typing import Callable
 
 
-r = redis.Redis()
+def track_get_page(fn: Callable) -> Callable:
+    """ Decorator for get_page
+    """
+    @wraps(fn)
+    def wrapper(url: str) -> str:
+        """ Wrapper that:
+            - check whether a url's data is cached
+            - tracks how many times get_page is called
+        """
+        client = redis.Redis()
+        client.incr(f'count:{url}')
+        cached_page = client.get(f'{url}')
+        if cached_page:
+            return cached_page.decode('utf-8')
+        response = fn(url)
+        client.set(f'{url}', response, 10)
+        return response
+    return wrapper
 
 
+@track_get_page
 def get_page(url: str) -> str:
+    """ Makes a http request to a given endpoint
     """
-    Inside get_page track how many times a particular URL was
-    accessed in the key count:{url} and cache the result with
-    an expiration time of 10 seconds
-    """
-    html = r.get(url)
-    if html:
-        return html.decode('utf-8')
-    else:
-        response = requests.get(url)
-        html = response.text
-        r.set(url, html, ex=10)
-        return html
-
-
-if __name__ == "__main__":
-    get_page("http://slowwly.robertomurray.co.uk")
+    response = requests.get(url)
+    return response.text
